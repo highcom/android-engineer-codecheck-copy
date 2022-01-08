@@ -12,6 +12,7 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.TopActivity.Companion.lastSearchDate
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -26,7 +27,10 @@ class OneViewModel(
     val context: Context
 ) : ViewModel() {
 
-    // 検索結果
+    /**
+     * 検索結果
+     */
+    @DelicateCoroutinesApi
     fun searchResults(inputText: String): List<item> = runBlocking {
         val client = HttpClient(Android)
 
@@ -42,9 +46,7 @@ class OneViewModel(
 
             val items = mutableListOf<item>()
 
-            /**
-             * アイテムの個数分ループする
-             */
+            // アイテムの個数分ループする
             for (i in 0 until jsonItems.length()) {
                 val jsonItem = jsonItems.optJSONObject(i)!!
                 val name = jsonItem.optString("full_name")
@@ -75,13 +77,37 @@ class OneViewModel(
     }
 }
 
+/**
+ * 詳細画面表示項目
+ */
 @Parcelize
 data class item(
+    /**
+     * リポジトリ名
+     */
     val name: String,
+    /**
+     * ユーザーアイコン
+     */
     val ownerIconUrl: String,
+    /**
+     * 使用言語
+     */
     val language: String,
+    /**
+     * 星獲得数
+     */
     val stargazersCount: Long,
+    /**
+     * ウォッチャー数
+     */
     val watchersCount: Long,
+    /**
+     * フォーク数
+     */
     val forksCount: Long,
+    /**
+     * イシュー数
+     */
     val openIssuesCount: Long,
 ) : Parcelable

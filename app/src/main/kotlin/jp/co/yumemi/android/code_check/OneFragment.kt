@@ -14,31 +14,36 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.databinding.FragmentOneBinding
 
-class OneFragment: Fragment(R.layout.fragment_one){
+/**
+ * リポジトリ検索画面
+ */
+class OneFragment : Fragment(R.layout.fragment_one) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
+    /**
+     * リポジトリ検索画面生成
+     */
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val _binding= FragmentOneBinding.bind(view)
+        val fragmentOneBinding = FragmentOneBinding.bind(view)
 
-        val _viewModel= OneViewModel(context!!)
+        val oneViewModel = OneViewModel(context!!)
 
-        val _layoutManager= LinearLayoutManager(context!!)
-        val _dividerItemDecoration=
-            DividerItemDecoration(context!!, _layoutManager.orientation)
-        val _adapter= CustomAdapter(object : CustomAdapter.OnItemClickListener{
-            override fun itemClick(item: item){
+        val linearLayoutManager = LinearLayoutManager(context!!)
+        val dividerItemDecoration =
+            DividerItemDecoration(context!!, linearLayoutManager.orientation)
+        val customAdapter = CustomAdapter(object : CustomAdapter.OnItemClickListener {
+            override fun itemClick(item: item) {
                 gotoRepositoryFragment(item)
             }
         })
 
-        _binding.searchInputText
-            .setOnEditorActionListener{ editText, action, _ ->
-                if (action== EditorInfo.IME_ACTION_SEARCH){
+        fragmentOneBinding.searchInputText
+            .setOnEditorActionListener { editText, action, _ ->
+                if (action == EditorInfo.IME_ACTION_SEARCH) {
                     editText.text.toString().let {
-                        _viewModel.searchResults(it).apply{
-                            _adapter.submitList(this)
+                        oneViewModel.searchResults(it).apply {
+                            customAdapter.submitList(this)
                         }
                     }
                     return@setOnEditorActionListener true
@@ -46,59 +51,78 @@ class OneFragment: Fragment(R.layout.fragment_one){
                 return@setOnEditorActionListener false
             }
 
-        _binding.recyclerView.also{
-            it.layoutManager= _layoutManager
-            it.addItemDecoration(_dividerItemDecoration)
-            it.adapter= _adapter
+        fragmentOneBinding.recyclerView.also {
+            it.layoutManager = linearLayoutManager
+            it.addItemDecoration(dividerItemDecoration)
+            it.adapter = customAdapter
         }
     }
 
-    fun gotoRepositoryFragment(item: item)
-    {
-        val _action= OneFragmentDirections
-            .actionRepositoriesFragmentToRepositoryFragment(item= item)
-        findNavController().navigate(_action)
+    /**
+     * リポジトリ詳細画面遷移
+     */
+    fun gotoRepositoryFragment(item: item) {
+        val navDirections = OneFragmentDirections
+            .actionRepositoriesFragmentToRepositoryFragment(item = item)
+        findNavController().navigate(navDirections)
     }
 }
 
-val diff_util= object: DiffUtil.ItemCallback<item>(){
-    override fun areItemsTheSame(oldItem: item, newItem: item): Boolean
-    {
-        return oldItem.name== newItem.name
+/**
+ * アイテム一覧変化通知
+ */
+val DIFF___UTIL: DiffUtil.ItemCallback<item> = object : DiffUtil.ItemCallback<item>() {
+    override fun areItemsTheSame(oldItem: item, newItem: item): Boolean {
+        return oldItem.name == newItem.name
     }
 
-    override fun areContentsTheSame(oldItem: item, newItem: item): Boolean
-    {
-        return oldItem== newItem
+    override fun areContentsTheSame(oldItem: item, newItem: item): Boolean {
+        return oldItem == newItem
     }
 
 }
 
+/**
+ * リポジトリ一覧表示項目用アダプタ
+ */
 class CustomAdapter(
     private val itemClickListener: OnItemClickListener,
-) : ListAdapter<item, CustomAdapter.ViewHolder>(diff_util){
+) : ListAdapter<item, CustomAdapter.ViewHolder>(DIFF___UTIL) {
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view)
+    /**
+     * 表示項目データホルダー
+     */
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-    interface OnItemClickListener{
-    	fun itemClick(item: item)
+    /**
+     * 項目タップ時のリスナーインターフェース
+     */
+    interface OnItemClickListener {
+        /**
+         * 項目タップ時のリスナー関数
+         */
+        fun itemClick(item: item)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-    {
-    	val _view= LayoutInflater.from(parent.context)
+    /**
+     * 表示項目データホルダー生成
+     */
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_item, parent, false)
-    	return ViewHolder(_view)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int)
-    {
-    	val _item= getItem(position)
-        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text=
-            _item.name
+    /**
+     * 表示項目データホルダーのバインディング
+     */
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = getItem(position)
+        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
+            item.name
 
-    	holder.itemView.setOnClickListener{
-     		itemClickListener.itemClick(_item)
-    	}
+        holder.itemView.setOnClickListener {
+            itemClickListener.itemClick(item)
+        }
     }
 }
