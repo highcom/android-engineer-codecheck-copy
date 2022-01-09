@@ -15,6 +15,6 @@ class SearchRepositoryMainActivity : AppCompatActivity(R.layout.activity_search_
         /**
          * 前回検索日付
          */
-        lateinit var lastSearchDate: Date
+        var lastSearchDate: Date? = null
     }
 }
