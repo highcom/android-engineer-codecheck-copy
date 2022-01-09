@@ -10,17 +10,17 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import coil.load
-import jp.co.yumemi.android.code_check.TopActivity.Companion.lastSearchDate
-import jp.co.yumemi.android.code_check.databinding.FragmentTwoBinding
+import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.databinding.FragmentDetailRepositoryBinding
 
 /**
  * リポジトリ詳細画面
  */
-class TwoFragment : Fragment(R.layout.fragment_two) {
+class DetailRepositoryFragment : Fragment(R.layout.fragment_detail_repository) {
 
-    private val args: TwoFragmentArgs by navArgs()
+    private val args: DetailRepositoryFragmentArgs by navArgs()
 
-    private var binding: FragmentTwoBinding? = null
+    private var binding: FragmentDetailRepositoryBinding? = null
     private val _binding get() = binding!!
 
     /**
@@ -32,7 +32,7 @@ class TwoFragment : Fragment(R.layout.fragment_two) {
 
         Log.d("検索した日時", lastSearchDate.toString())
 
-        binding = FragmentTwoBinding.bind(view)
+        binding = FragmentDetailRepositoryBinding.bind(view)
 
         val item = args.item
 

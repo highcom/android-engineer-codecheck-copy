@@ -9,7 +9,7 @@ import java.util.*
 /**
  * GitHubリポジトリ検索メインアクティビティ
  */
-class TopActivity : AppCompatActivity(R.layout.activity_top) {
+class SearchRepositoryMainActivity : AppCompatActivity(R.layout.activity_search_repository_main) {
 
     companion object {
         /**

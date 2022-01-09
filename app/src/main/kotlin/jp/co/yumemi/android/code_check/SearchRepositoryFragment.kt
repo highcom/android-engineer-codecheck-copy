@@ -12,12 +12,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
-import jp.co.yumemi.android.code_check.databinding.FragmentOneBinding
+import jp.co.yumemi.android.code_check.databinding.FragmentSearchRepositoryBinding
 
 /**
  * リポジトリ検索画面
  */
-class OneFragment : Fragment(R.layout.fragment_one) {
+class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
     /**
      * リポジトリ検索画面生成
@@ -25,9 +25,9 @@ class OneFragment : Fragment(R.layout.fragment_one) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val fragmentOneBinding = FragmentOneBinding.bind(view)
+        val fragmentSearchRepositoryBinding = FragmentSearchRepositoryBinding.bind(view)
 
-        val oneViewModel = OneViewModel(context!!)
+        val gitHubRepositoryViewModel = GitHubRepositoryViewModel(context!!)
 
         val linearLayoutManager = LinearLayoutManager(context!!)
         val dividerItemDecoration =
@@ -38,11 +38,11 @@ class OneFragment : Fragment(R.layout.fragment_one) {
             }
         })
 
-        fragmentOneBinding.searchInputText
+        fragmentSearchRepositoryBinding.searchInputText
             .setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
                     editText.text.toString().let {
-                        oneViewModel.searchResults(it).apply {
+                        gitHubRepositoryViewModel.searchResults(it).apply {
                             customAdapter.submitList(this)
                         }
                     }
@@ -51,7 +51,7 @@ class OneFragment : Fragment(R.layout.fragment_one) {
                 return@setOnEditorActionListener false
             }
 
-        fragmentOneBinding.recyclerView.also {
+        fragmentSearchRepositoryBinding.recyclerView.also {
             it.layoutManager = linearLayoutManager
             it.addItemDecoration(dividerItemDecoration)
             it.adapter = customAdapter
@@ -62,7 +62,7 @@ class OneFragment : Fragment(R.layout.fragment_one) {
      * リポジトリ詳細画面遷移
      */
     fun gotoRepositoryFragment(item: item) {
-        val navDirections = OneFragmentDirections
+        val navDirections = SearchRepositoryFragmentDirections
             .actionRepositoriesFragmentToRepositoryFragment(item = item)
         findNavController().navigate(navDirections)
     }
@@ -109,7 +109,7 @@ class CustomAdapter(
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_item, parent, false)
+            .inflate(R.layout.layout_repository_item, parent, false)
         return ViewHolder(view)
     }
 

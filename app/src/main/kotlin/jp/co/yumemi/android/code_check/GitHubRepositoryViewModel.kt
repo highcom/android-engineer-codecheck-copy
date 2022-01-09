@@ -11,7 +11,7 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import jp.co.yumemi.android.code_check.TopActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity.Companion.lastSearchDate
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -21,9 +21,9 @@ import org.json.JSONObject
 import java.util.*
 
 /**
- * TwoFragment で使う
+ * GitHubリポジトリデータ取得
  */
-class OneViewModel(
+class GitHubRepositoryViewModel(
     val context: Context
 ) : ViewModel() {
 
