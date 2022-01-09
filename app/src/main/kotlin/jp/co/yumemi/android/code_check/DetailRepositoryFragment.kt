@@ -37,10 +37,15 @@ class DetailRepositoryFragment : Fragment(R.layout.fragment_detail_repository) {
 
         detailRepositoryBinding.ownerIconView.load(itemDetail.ownerIconUrl)
         detailRepositoryBinding.nameView.text = itemDetail.name
-        detailRepositoryBinding.languageView.text = itemDetail.language
-        detailRepositoryBinding.starsView.text = "${itemDetail.stargazersCount} stars"
-        detailRepositoryBinding.watchersView.text = "${itemDetail.watchersCount} watchers"
-        detailRepositoryBinding.forksView.text = "${itemDetail.forksCount} forks"
-        detailRepositoryBinding.openIssuesView.text = "${itemDetail.openIssuesCount} open issues"
+        detailRepositoryBinding.languageView.text =
+            getString(R.string.written_language, itemDetail.language)
+        detailRepositoryBinding.starsView.text =
+            getString(R.string.count_starts, itemDetail.stargazersCount.toString())
+        detailRepositoryBinding.watchersView.text =
+            getString(R.string.count_watchers, itemDetail.watchersCount.toString())
+        detailRepositoryBinding.forksView.text =
+            getString(R.string.count_forks, itemDetail.forksCount.toString())
+        detailRepositoryBinding.openIssuesView.text =
+            getString(R.string.count_open_issues, itemDetail.openIssuesCount.toString())
     }
 }

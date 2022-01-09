@@ -4,10 +4,12 @@
 package jp.co.yumemi.android.code_check
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
+import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity.Companion.lastSearchDate
@@ -22,9 +24,7 @@ import java.util.*
 /**
  * GitHubリポジトリデータ取得
  */
-class GitHubRepositoryViewModel(
-    private val _languagePrefix: String
-) : ViewModel() {
+class GitHubRepositoryViewModel : ViewModel() {
 
     /**
      * 検索結果
@@ -34,44 +34,49 @@ class GitHubRepositoryViewModel(
         val client = HttpClient(Android)
 
         return@runBlocking GlobalScope.async {
-            val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
-                header("Accept", "application/vnd.github.v3+json")
-                parameter("q", inputText)
-            }
-
-            val jsonBody = JSONObject(response.receive<String>())
-
-            val jsonItems = jsonBody.optJSONArray("items")!!
-
             val items = mutableListOf<ItemDetail>()
 
-            // アイテムの個数分ループする
-            for (i in 0 until jsonItems.length()) {
-                val jsonItem = jsonItems.optJSONObject(i)!!
-                val name = jsonItem.optString("full_name")
-                val ownerIconUrl = jsonItem.optJSONObject("owner")!!.optString("avatar_url")
-                val language = jsonItem.optString("language")
-                val stargazersCount = jsonItem.optLong("stargazers_count")
-                val watchersCount = jsonItem.optLong("watchers_count")
-                val forksCount = jsonItem.optLong("forks_conut")
-                val openIssuesCount = jsonItem.optLong("open_issues_count")
+            try {
+                val response: HttpResponse =
+                    client.get("https://api.github.com/search/repositories") {
+                        header("Accept", "application/vnd.github.v3+json")
+                        parameter("q", inputText)
+                    }
 
-                items.add(
-                    ItemDetail(
-                        name = name,
-                        ownerIconUrl = ownerIconUrl,
-                        language = _languagePrefix + language,
-                        stargazersCount = stargazersCount,
-                        watchersCount = watchersCount,
-                        forksCount = forksCount,
-                        openIssuesCount = openIssuesCount
+                val jsonBody = JSONObject(response.receive<String>())
+
+                val jsonItems = jsonBody.optJSONArray("items")!!
+
+                // アイテムの個数分ループする
+                for (i in 0 until jsonItems.length()) {
+                    val jsonItem = jsonItems.optJSONObject(i)!!
+                    val name = jsonItem.optString("full_name")
+                    val ownerIconUrl = jsonItem.optJSONObject("owner")!!.optString("avatar_url")
+                    val language = jsonItem.optString("language")
+                    val stargazersCount = jsonItem.optLong("stargazers_count")
+                    val watchersCount = jsonItem.optLong("watchers_count")
+                    val forksCount = jsonItem.optLong("forks_conut")
+                    val openIssuesCount = jsonItem.optLong("open_issues_count")
+
+                    items.add(
+                        ItemDetail(
+                            name = name,
+                            ownerIconUrl = ownerIconUrl,
+                            language = language,
+                            stargazersCount = stargazersCount,
+                            watchersCount = watchersCount,
+                            forksCount = forksCount,
+                            openIssuesCount = openIssuesCount
+                        )
                     )
-                )
+                }
+                lastSearchDate = Date()
+
+                return@async items.toList()
+            } catch (e: Exception) {
+                Log.d("HTTPクライアント", e.message.toString())
+                return@async items.toList()
             }
-
-            lastSearchDate = Date()
-
-            return@async items.toList()
         }.await()
     }
 }
