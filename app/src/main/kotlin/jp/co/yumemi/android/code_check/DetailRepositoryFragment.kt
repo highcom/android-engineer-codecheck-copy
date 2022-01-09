@@ -20,8 +20,7 @@ class DetailRepositoryFragment : Fragment(R.layout.fragment_detail_repository) {
 
     private val args: DetailRepositoryFragmentArgs by navArgs()
 
-    private var binding: FragmentDetailRepositoryBinding? = null
-    private val _binding get() = binding!!
+    private lateinit var detailRepositoryBinding: FragmentDetailRepositoryBinding
 
     /**
      * リポジトリ詳細画面生成
@@ -30,18 +29,18 @@ class DetailRepositoryFragment : Fragment(R.layout.fragment_detail_repository) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("検索した日時", lastSearchDate.toString())
+        lastSearchDate?.toString()?.let { Log.d("検索した日時", it) }
 
-        binding = FragmentDetailRepositoryBinding.bind(view)
+        detailRepositoryBinding = FragmentDetailRepositoryBinding.bind(view)
 
-        val item = args.item
+        val itemDetail = args.itemDetail
 
-        _binding.ownerIconView.load(item.ownerIconUrl)
-        _binding.nameView.text = item.name
-        _binding.languageView.text = item.language
-        _binding.starsView.text = "${item.stargazersCount} stars"
-        _binding.watchersView.text = "${item.watchersCount} watchers"
-        _binding.forksView.text = "${item.forksCount} forks"
-        _binding.openIssuesView.text = "${item.openIssuesCount} open issues"
+        detailRepositoryBinding.ownerIconView.load(itemDetail.ownerIconUrl)
+        detailRepositoryBinding.nameView.text = itemDetail.name
+        detailRepositoryBinding.languageView.text = itemDetail.language
+        detailRepositoryBinding.starsView.text = "${itemDetail.stargazersCount} stars"
+        detailRepositoryBinding.watchersView.text = "${itemDetail.watchersCount} watchers"
+        detailRepositoryBinding.forksView.text = "${itemDetail.forksCount} forks"
+        detailRepositoryBinding.openIssuesView.text = "${itemDetail.openIssuesCount} open issues"
     }
 }

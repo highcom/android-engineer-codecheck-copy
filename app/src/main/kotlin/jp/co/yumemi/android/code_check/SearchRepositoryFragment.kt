@@ -13,11 +13,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.databinding.FragmentSearchRepositoryBinding
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 /**
  * リポジトリ検索画面
  */
+@DelicateCoroutinesApi
 class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
+
+    private lateinit var fragmentSearchRepositoryBinding: FragmentSearchRepositoryBinding
+    private lateinit var gitHubRepositoryViewModel: GitHubRepositoryViewModel
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var dividerItemDecoration: DividerItemDecoration
+    private lateinit var customAdapter: CustomAdapter
 
     /**
      * リポジトリ検索画面生成
@@ -25,16 +33,16 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val fragmentSearchRepositoryBinding = FragmentSearchRepositoryBinding.bind(view)
+        fragmentSearchRepositoryBinding = FragmentSearchRepositoryBinding.bind(view)
 
-        val gitHubRepositoryViewModel = GitHubRepositoryViewModel(context!!)
+        gitHubRepositoryViewModel = GitHubRepositoryViewModel(getString(R.string.written_language))
 
-        val linearLayoutManager = LinearLayoutManager(context!!)
-        val dividerItemDecoration =
-            DividerItemDecoration(context!!, linearLayoutManager.orientation)
-        val customAdapter = CustomAdapter(object : CustomAdapter.OnItemClickListener {
-            override fun itemClick(item: item) {
-                gotoRepositoryFragment(item)
+        linearLayoutManager = LinearLayoutManager(requireContext())
+        dividerItemDecoration =
+            DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
+        customAdapter = CustomAdapter(object : CustomAdapter.OnItemClickListener {
+            override fun itemClick(ItemDetail: ItemDetail) {
+                gotoRepositoryFragment(ItemDetail)
             }
         })
 
@@ -61,9 +69,9 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
     /**
      * リポジトリ詳細画面遷移
      */
-    fun gotoRepositoryFragment(item: item) {
+    fun gotoRepositoryFragment(itemDetail: ItemDetail) {
         val navDirections = SearchRepositoryFragmentDirections
-            .actionRepositoriesFragmentToRepositoryFragment(item = item)
+            .actionRepositoriesFragmentToRepositoryFragment(itemDetail = itemDetail)
         findNavController().navigate(navDirections)
     }
 }
@@ -71,13 +79,13 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 /**
  * アイテム一覧変化通知
  */
-val DIFF___UTIL: DiffUtil.ItemCallback<item> = object : DiffUtil.ItemCallback<item>() {
-    override fun areItemsTheSame(oldItem: item, newItem: item): Boolean {
-        return oldItem.name == newItem.name
+val DIFF___UTIL: DiffUtil.ItemCallback<ItemDetail> = object : DiffUtil.ItemCallback<ItemDetail>() {
+    override fun areItemsTheSame(oldItemDetail: ItemDetail, newItemDetail: ItemDetail): Boolean {
+        return oldItemDetail.name == newItemDetail.name
     }
 
-    override fun areContentsTheSame(oldItem: item, newItem: item): Boolean {
-        return oldItem == newItem
+    override fun areContentsTheSame(oldItemDetail: ItemDetail, newItemDetail: ItemDetail): Boolean {
+        return oldItemDetail == newItemDetail
     }
 
 }
@@ -87,7 +95,7 @@ val DIFF___UTIL: DiffUtil.ItemCallback<item> = object : DiffUtil.ItemCallback<it
  */
 class CustomAdapter(
     private val itemClickListener: OnItemClickListener,
-) : ListAdapter<item, CustomAdapter.ViewHolder>(DIFF___UTIL) {
+) : ListAdapter<ItemDetail, CustomAdapter.ViewHolder>(DIFF___UTIL) {
 
     /**
      * 表示項目データホルダー
@@ -101,7 +109,7 @@ class CustomAdapter(
         /**
          * 項目タップ時のリスナー関数
          */
-        fun itemClick(item: item)
+        fun itemClick(ItemDetail: ItemDetail)
     }
 
     /**
@@ -118,9 +126,7 @@ class CustomAdapter(
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
-            item.name
-
+        holder.itemView.findViewById<TextView>(R.id.repositoryNameView).text = item.name
         holder.itemView.setOnClickListener {
             itemClickListener.itemClick(item)
         }
