@@ -35,7 +35,7 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
         fragmentSearchRepositoryBinding = FragmentSearchRepositoryBinding.bind(view)
 
-        gitHubRepositoryViewModel = GitHubRepositoryViewModel(getString(R.string.written_language))
+        gitHubRepositoryViewModel = GitHubRepositoryViewModel()
 
         linearLayoutManager = LinearLayoutManager(requireContext())
         dividerItemDecoration =
