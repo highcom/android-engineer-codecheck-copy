@@ -42,24 +42,24 @@ class GitHubRepository {
 
                 // アイテムの個数分ループする
                 for (i in 0 until jsonItems.length()) {
-                    val jsonItem = jsonItems.optJSONObject(i)!!
-                    val name = jsonItem.optString("full_name")
-                    val ownerIconUrl = jsonItem.optJSONObject("owner")!!.optString("avatar_url")
-                    val language = jsonItem.optString("language")
-                    val stargazersCount = jsonItem.optLong("stargazers_count")
-                    val watchersCount = jsonItem.optLong("watchers_count")
-                    val forksCount = jsonItem.optLong("forks_conut")
-                    val openIssuesCount = jsonItem.optLong("open_issues_count")
+                    val jsonItem = jsonItems.optJSONObject(i)
+                    val name = jsonItem?.optString("full_name")
+                    val ownerIconUrl = jsonItem?.optJSONObject("owner")?.optString("avatar_url")
+                    val language = jsonItem?.optString("language")
+                    val stargazersCount = jsonItem?.optLong("stargazers_count")
+                    val watchersCount = jsonItem?.optLong("watchers_count")
+                    val forksCount = jsonItem?.optLong("forks_count")
+                    val openIssuesCount = jsonItem?.optLong("open_issues_count")
 
                     items.add(
                         ItemDetail(
-                            name = name,
-                            ownerIconUrl = ownerIconUrl,
-                            language = language,
-                            stargazersCount = stargazersCount,
-                            watchersCount = watchersCount,
-                            forksCount = forksCount,
-                            openIssuesCount = openIssuesCount
+                            name = name ?: "Anonymous",
+                            ownerIconUrl = ownerIconUrl ?: "",
+                            language = language ?: "None",
+                            stargazersCount = stargazersCount ?: 0,
+                            watchersCount = watchersCount ?: 0,
+                            forksCount = forksCount ?: 0,
+                            openIssuesCount = openIssuesCount ?: 0
                         )
                     )
                 }
