@@ -1,17 +1,12 @@
-/*
- * Copyright © 2021 YUMEMI Inc. All rights reserved.
- */
 package jp.co.yumemi.android.code_check.datamodel
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
-import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -20,9 +15,9 @@ import org.json.JSONObject
 import java.util.*
 
 /**
- * GitHubリポジトリデータ取得
+ * GitHubデータ取得リポジトリ
  */
-class GitHubRepositoryViewModel : ViewModel() {
+class GitHubRepository {
 
     /**
      * 検索結果
@@ -68,7 +63,7 @@ class GitHubRepositoryViewModel : ViewModel() {
                         )
                     )
                 }
-                lastSearchDate = Date()
+                SearchRepositoryMainActivity.lastSearchDate = Date()
 
                 return@async items.toList()
             } catch (e: Exception) {
