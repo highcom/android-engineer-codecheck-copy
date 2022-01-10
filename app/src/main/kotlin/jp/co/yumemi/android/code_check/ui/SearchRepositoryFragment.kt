@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentSearchRepositoryBinding
-import jp.co.yumemi.android.code_check.datamodel.GitHubRepositoryViewModel
 import jp.co.yumemi.android.code_check.datamodel.ItemDetail
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -22,7 +21,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
     private lateinit var fragmentSearchRepositoryBinding: FragmentSearchRepositoryBinding
-    private lateinit var gitHubRepositoryViewModel: GitHubRepositoryViewModel
+    private lateinit var searchRepositoryViewModel: SearchRepositoryViewModel
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var dividerItemDecoration: DividerItemDecoration
     private lateinit var customAdapter: CustomAdapter
@@ -35,7 +34,7 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
         fragmentSearchRepositoryBinding = FragmentSearchRepositoryBinding.bind(view)
 
-        gitHubRepositoryViewModel = GitHubRepositoryViewModel()
+        searchRepositoryViewModel = SearchRepositoryViewModel()
 
         linearLayoutManager = LinearLayoutManager(requireContext())
         dividerItemDecoration =
@@ -46,24 +45,28 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
             }
         })
 
+        fragmentSearchRepositoryBinding.recyclerView.also {
+            it.layoutManager = linearLayoutManager
+            it.addItemDecoration(dividerItemDecoration)
+            it.adapter = customAdapter
+        }
+
+        // 入力文字列でリポジトリを検索
         fragmentSearchRepositoryBinding.searchInputText
             .setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
                     editText.text.toString().let {
-                        gitHubRepositoryViewModel.searchResults(it).apply {
-                            customAdapter.submitList(this)
-                        }
+                        searchRepositoryViewModel.searchRepositories(it)
                     }
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
             }
 
-        fragmentSearchRepositoryBinding.recyclerView.also {
-            it.layoutManager = linearLayoutManager
-            it.addItemDecoration(dividerItemDecoration)
-            it.adapter = customAdapter
-        }
+        // 検索結果を監視してアダプタに反映
+        searchRepositoryViewModel.itemDetails.observe(viewLifecycleOwner, { it ->
+            it?.let { customAdapter.submitList(it) }
+        })
     }
 
     /**

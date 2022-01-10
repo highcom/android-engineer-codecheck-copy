@@ -1,17 +1,12 @@
-/*
- * Copyright © 2021 YUMEMI Inc. All rights reserved.
- */
 package jp.co.yumemi.android.code_check.datamodel
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
-import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -20,9 +15,9 @@ import org.json.JSONObject
 import java.util.*
 
 /**
- * GitHubリポジトリデータ取得
+ * GitHubデータ取得リポジトリ
  */
-class GitHubRepositoryViewModel : ViewModel() {
+class GitHubRepository {
 
     /**
      * 検索結果
@@ -47,28 +42,28 @@ class GitHubRepositoryViewModel : ViewModel() {
 
                 // アイテムの個数分ループする
                 for (i in 0 until jsonItems.length()) {
-                    val jsonItem = jsonItems.optJSONObject(i)!!
-                    val name = jsonItem.optString("full_name")
-                    val ownerIconUrl = jsonItem.optJSONObject("owner")!!.optString("avatar_url")
-                    val language = jsonItem.optString("language")
-                    val stargazersCount = jsonItem.optLong("stargazers_count")
-                    val watchersCount = jsonItem.optLong("watchers_count")
-                    val forksCount = jsonItem.optLong("forks_conut")
-                    val openIssuesCount = jsonItem.optLong("open_issues_count")
+                    val jsonItem = jsonItems.optJSONObject(i)
+                    val name = jsonItem?.optString("full_name")
+                    val ownerIconUrl = jsonItem?.optJSONObject("owner")?.optString("avatar_url")
+                    val language = jsonItem?.optString("language")
+                    val stargazersCount = jsonItem?.optLong("stargazers_count")
+                    val watchersCount = jsonItem?.optLong("watchers_count")
+                    val forksCount = jsonItem?.optLong("forks_count")
+                    val openIssuesCount = jsonItem?.optLong("open_issues_count")
 
                     items.add(
                         ItemDetail(
-                            name = name,
-                            ownerIconUrl = ownerIconUrl,
-                            language = language,
-                            stargazersCount = stargazersCount,
-                            watchersCount = watchersCount,
-                            forksCount = forksCount,
-                            openIssuesCount = openIssuesCount
+                            name = name ?: "Anonymous",
+                            ownerIconUrl = ownerIconUrl ?: "",
+                            language = language ?: "None",
+                            stargazersCount = stargazersCount ?: 0,
+                            watchersCount = watchersCount ?: 0,
+                            forksCount = forksCount ?: 0,
+                            openIssuesCount = openIssuesCount ?: 0
                         )
                     )
                 }
-                lastSearchDate = Date()
+                SearchRepositoryMainActivity.lastSearchDate = Date()
 
                 return@async items.toList()
             } catch (e: Exception) {
