@@ -13,14 +13,15 @@ import kotlinx.coroutines.*
 /**
  * GitHubリポジトリデータ取得
  */
-class SearchRepositoryViewModel : ViewModel() {
+class SearchRepositoryViewModel(
+    private val gitHubRepository: GitHubRepository
+) : ViewModel() {
     private val _itemDetails = MutableLiveData<List<ItemDetail>>()
 
     /**
      * GitHubリポジトリデータ一覧
      */
     var itemDetails: LiveData<List<ItemDetail>> = _itemDetails
-    private val gitHubRepository: GitHubRepository = GitHubRepository()
 
     /**
      * リポジトリ検索処理
