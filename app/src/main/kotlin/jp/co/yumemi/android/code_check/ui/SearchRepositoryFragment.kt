@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentSearchRepositoryBinding
+import jp.co.yumemi.android.code_check.datamodel.GitHubRepository
 import jp.co.yumemi.android.code_check.datamodel.ItemDetail
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -34,7 +35,7 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
         fragmentSearchRepositoryBinding = FragmentSearchRepositoryBinding.bind(view)
 
-        searchRepositoryViewModel = SearchRepositoryViewModel()
+        searchRepositoryViewModel = SearchRepositoryViewModel(GitHubRepository())
 
         linearLayoutManager = LinearLayoutManager(requireContext())
         dividerItemDecoration =
