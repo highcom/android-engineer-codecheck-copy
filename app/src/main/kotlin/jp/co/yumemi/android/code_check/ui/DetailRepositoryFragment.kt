@@ -40,13 +40,9 @@ class DetailRepositoryFragment : Fragment(R.layout.fragment_detail_repository) {
         detailRepositoryBinding.nameView.text = itemDetail.name
         detailRepositoryBinding.languageView.text =
             getString(R.string.written_language, itemDetail.language)
-        detailRepositoryBinding.starsView.text =
-            getString(R.string.count_starts, itemDetail.stargazersCount.toString())
-        detailRepositoryBinding.watchersView.text =
-            getString(R.string.count_watchers, itemDetail.watchersCount.toString())
-        detailRepositoryBinding.forksView.text =
-            getString(R.string.count_forks, itemDetail.forksCount.toString())
-        detailRepositoryBinding.openIssuesView.text =
-            getString(R.string.count_open_issues, itemDetail.openIssuesCount.toString())
+        detailRepositoryBinding.starsCountView.text = itemDetail.stargazersCount.toString()
+        detailRepositoryBinding.watchersCountView.text = itemDetail.watchersCount.toString()
+        detailRepositoryBinding.forksCountView.text = itemDetail.forksCount.toString()
+        detailRepositoryBinding.openIssuesCountView.text = itemDetail.openIssuesCount.toString()
     }
 }

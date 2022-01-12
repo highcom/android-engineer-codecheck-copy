@@ -6,10 +6,12 @@ package jp.co.yumemi.android.code_check.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.datamodel.ItemDetail
 
@@ -50,12 +52,14 @@ class CustomAdapter(
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val repositoryNameView: TextView = view.findViewById(R.id.repositoryNameView)
+        private val ownerThumbnailView: ImageView = view.findViewById(R.id.ownerThumbnailView)
 
         /**
          * 表示項目のバインド
          */
         fun bind(itemDetail: ItemDetail, itemClickListener: OnItemClickListener) {
             repositoryNameView.text = itemDetail.name
+            ownerThumbnailView.load(itemDetail.ownerIconUrl)
             itemView.setOnClickListener {
                 itemClickListener.itemClick(itemDetail)
             }
