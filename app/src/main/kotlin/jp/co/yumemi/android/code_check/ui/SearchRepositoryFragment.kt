@@ -24,7 +24,6 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
     private lateinit var fragmentSearchRepositoryBinding: FragmentSearchRepositoryBinding
     private lateinit var searchRepositoryViewModel: SearchRepositoryViewModel
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var dividerItemDecoration: DividerItemDecoration
     private lateinit var customAdapter: CustomAdapter
 
     /**
@@ -38,8 +37,6 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
         searchRepositoryViewModel = SearchRepositoryViewModel(GitHubRepository())
 
         linearLayoutManager = LinearLayoutManager(requireContext())
-        dividerItemDecoration =
-            DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
         customAdapter = CustomAdapter(object : CustomAdapter.OnItemClickListener {
             override fun itemClick(ItemDetail: ItemDetail) {
                 gotoRepositoryFragment(ItemDetail)
@@ -48,7 +45,6 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
         fragmentSearchRepositoryBinding.recyclerView.also {
             it.layoutManager = linearLayoutManager
-            it.addItemDecoration(dividerItemDecoration)
             it.adapter = customAdapter
         }
 
