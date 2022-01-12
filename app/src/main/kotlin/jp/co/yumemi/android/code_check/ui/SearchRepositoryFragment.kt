@@ -3,9 +3,12 @@
  */
 package jp.co.yumemi.android.code_check.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
@@ -55,6 +58,13 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
                     editText.text.toString().let {
                         searchRepositoryViewModel.searchRepositories(it)
                     }
+
+                    // 検索した後はキーボードを閉じる
+                    val inputMethodManager: InputMethodManager =
+                        context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(view.windowToken,
+                        InputMethodManager.HIDE_NOT_ALWAYS)
+
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
@@ -62,7 +72,15 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
         // 検索結果を監視してアダプタに反映
         searchRepositoryViewModel.itemDetails.observe(viewLifecycleOwner, { it ->
-            it?.let { customAdapter.submitList(it) }
+            it?.let {
+                customAdapter.submitList(it)
+
+                if (it.isEmpty()) {
+                    // 検索結果が0件だった事を通知
+                    Toast.makeText(context, getString(R.string.search_result_zero),
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
         })
     }
 

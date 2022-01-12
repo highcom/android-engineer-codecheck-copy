@@ -20,6 +20,10 @@ data class ItemDetail(
      */
     val ownerIconUrl: String,
     /**
+     * GitHubユーザーホームページ
+     */
+    val htmlUrl: String,
+    /**
      * 使用言語
      */
     val language: String,

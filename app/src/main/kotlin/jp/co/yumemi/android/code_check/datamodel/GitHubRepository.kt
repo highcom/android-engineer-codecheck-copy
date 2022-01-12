@@ -45,6 +45,7 @@ class GitHubRepository {
                     val jsonItem = jsonItems.optJSONObject(i)
                     val name = jsonItem?.optString("full_name")
                     val ownerIconUrl = jsonItem?.optJSONObject("owner")?.optString("avatar_url")
+                    val htmlUrl = jsonItem?.optJSONObject("owner")?.optString("html_url")
                     val language = jsonItem?.optString("language")
                     val stargazersCount = jsonItem?.optLong("stargazers_count")
                     val watchersCount = jsonItem?.optLong("watchers_count")
@@ -55,6 +56,7 @@ class GitHubRepository {
                         ItemDetail(
                             name = name ?: "Anonymous",
                             ownerIconUrl = ownerIconUrl ?: "",
+                            htmlUrl = htmlUrl ?: "",
                             language = language ?: "None",
                             stargazersCount = stargazersCount ?: 0,
                             watchersCount = watchersCount ?: 0,
