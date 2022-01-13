@@ -6,11 +6,13 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.LinearLayoutCompat
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.*
 
 import org.hamcrest.CoreMatchers.allOf
@@ -23,6 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.hamcrest.core.Is.`is`
+import org.hamcrest.core.IsInstanceOf
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -78,7 +81,18 @@ class SearchRepositoryMainActivityTest {
                 )
             )
         )
+        recyclerView.check(ViewAssertions.matches(isDisplayed()))
+
         recyclerView.perform(actionOnItemAtPosition<ViewHolder>(0, click()))
+
+        val imageView = onView(
+            allOf(
+                withId(R.id.ownerIconView),
+                withParent(withParent(IsInstanceOf.instanceOf(LinearLayoutCompat::class.java))),
+                isDisplayed()
+            )
+        )
+        imageView.check(ViewAssertions.matches(isDisplayed()))
     }
 
     private fun childAtPosition(
