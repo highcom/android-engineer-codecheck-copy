@@ -3,9 +3,11 @@
  */
 package jp.co.yumemi.android.code_check.ui
 
+import android.content.ClipData
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import jp.co.yumemi.android.code_check.datamodel.GitHubRepository
 import jp.co.yumemi.android.code_check.datamodel.ItemDetail
 import kotlinx.coroutines.*
@@ -26,8 +28,9 @@ class SearchRepositoryViewModel(
     /**
      * リポジトリ検索処理
      */
-    @DelicateCoroutinesApi
     fun searchRepositories(inputText: String) {
-        _itemDetails.value = gitHubRepository.searchResults(inputText)
+        viewModelScope.launch(Dispatchers.Default) {
+            _itemDetails.postValue(gitHubRepository.searchResults(inputText))
+        }
     }
 }
