@@ -10,6 +10,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.createViewModelLazy
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.R
@@ -25,7 +28,11 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
     private lateinit var fragmentSearchRepositoryBinding: FragmentSearchRepositoryBinding
-    private lateinit var searchRepositoryViewModel: SearchRepositoryViewModel
+    private val searchRepositoryViewModel : SearchRepositoryViewModel by lazy {
+        val repository = GitHubRepository()
+        val factory = SearchRepositoryViewModel.Factory(repository)
+        ViewModelProvider(this, factory)[SearchRepositoryViewModel::class.java]
+    }
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var customAdapter: CustomAdapter
 
@@ -36,8 +43,6 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
         super.onViewCreated(view, savedInstanceState)
 
         fragmentSearchRepositoryBinding = FragmentSearchRepositoryBinding.bind(view)
-
-        searchRepositoryViewModel = SearchRepositoryViewModel(GitHubRepository())
 
         linearLayoutManager = LinearLayoutManager(requireContext())
         customAdapter = CustomAdapter(object : CustomAdapter.OnItemClickListener {

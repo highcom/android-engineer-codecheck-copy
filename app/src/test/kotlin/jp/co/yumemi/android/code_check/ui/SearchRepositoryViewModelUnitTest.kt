@@ -55,6 +55,7 @@ class SearchRepositoryViewModelUnitTest {
             ItemDetail(
                 name = "CorrectTest",
                 ownerIconUrl = "https://github.com/",
+                htmlUrl = "https://github.com/",
                 language = "Kotlin",
                 stargazersCount = 1,
                 watchersCount = 2,

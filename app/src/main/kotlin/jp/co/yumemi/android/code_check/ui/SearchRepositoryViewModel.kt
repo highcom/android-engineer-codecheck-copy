@@ -4,10 +4,7 @@
 package jp.co.yumemi.android.code_check.ui
 
 import android.content.ClipData
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import jp.co.yumemi.android.code_check.datamodel.GitHubRepository
 import jp.co.yumemi.android.code_check.datamodel.ItemDetail
 import kotlinx.coroutines.*
@@ -20,6 +17,15 @@ class SearchRepositoryViewModel(
 ) : ViewModel() {
     private val _itemDetails = MutableLiveData<List<ItemDetail>>()
 
+    class Factory(
+        private val repository: GitHubRepository
+    ) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("unchecked_cast")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return SearchRepositoryViewModel(repository) as T
+        }
+    }
+
     /**
      * GitHubリポジトリデータ一覧
      */
@@ -29,7 +35,7 @@ class SearchRepositoryViewModel(
      * リポジトリ検索処理
      */
     fun searchRepositories(inputText: String) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             _itemDetails.postValue(gitHubRepository.searchResults(inputText))
         }
     }
