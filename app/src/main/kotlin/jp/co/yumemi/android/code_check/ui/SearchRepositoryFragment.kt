@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.createViewModelLazy
 import androidx.fragment.app.viewModels
@@ -24,6 +25,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 /**
  * リポジトリ検索画面
  */
+@Keep
 @DelicateCoroutinesApi
 class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 

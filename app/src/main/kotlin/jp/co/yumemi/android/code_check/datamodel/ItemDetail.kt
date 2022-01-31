@@ -4,11 +4,13 @@
 package jp.co.yumemi.android.code_check.datamodel
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
 
 /**
  * 詳細画面表示項目
  */
+@Keep
 @Parcelize
 data class ItemDetail(
     /**

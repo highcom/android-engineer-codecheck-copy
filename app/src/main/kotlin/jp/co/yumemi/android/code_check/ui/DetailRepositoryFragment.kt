@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -19,6 +20,7 @@ import jp.co.yumemi.android.code_check.databinding.FragmentDetailRepositoryBindi
 /**
  * リポジトリ詳細画面
  */
+@Keep
 class DetailRepositoryFragment : Fragment(R.layout.fragment_detail_repository) {
 
     private val args: DetailRepositoryFragmentArgs by navArgs()
