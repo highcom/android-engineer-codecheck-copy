@@ -27,7 +27,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 @DelicateCoroutinesApi
 class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
 
-    private lateinit var fragmentSearchRepositoryBinding: FragmentSearchRepositoryBinding
+    private var fragmentSearchRepositoryBinding: FragmentSearchRepositoryBinding? = null
     private val searchRepositoryViewModel : SearchRepositoryViewModel by lazy {
         val repository = GitHubRepository()
         val factory = SearchRepositoryViewModel.Factory(repository)
@@ -51,14 +51,14 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
             }
         })
 
-        fragmentSearchRepositoryBinding.recyclerView.also {
-            it.layoutManager = linearLayoutManager
-            it.adapter = customAdapter
+        fragmentSearchRepositoryBinding?.recyclerView.also {
+            it?.layoutManager = linearLayoutManager
+            it?.adapter = customAdapter
         }
 
         // 入力文字列でリポジトリを検索
-        fragmentSearchRepositoryBinding.searchInputText
-            .setOnEditorActionListener { editText, action, _ ->
+        fragmentSearchRepositoryBinding?.searchInputText
+            ?.setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
                     editText.text.toString().let {
                         searchRepositoryViewModel.searchRepositories(it)
@@ -76,17 +76,24 @@ class SearchRepositoryFragment : Fragment(R.layout.fragment_search_repository) {
             }
 
         // 検索結果を監視してアダプタに反映
-        searchRepositoryViewModel.itemDetails.observe(viewLifecycleOwner, { it ->
+        searchRepositoryViewModel.itemDetails.observe(viewLifecycleOwner) { it ->
             it?.let {
                 customAdapter.submitList(it)
 
                 if (it.isEmpty()) {
                     // 検索結果が0件だった事を通知
-                    Toast.makeText(context, getString(R.string.search_result_zero),
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context, getString(R.string.search_result_zero),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-        })
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        fragmentSearchRepositoryBinding = null
     }
 
     /**
