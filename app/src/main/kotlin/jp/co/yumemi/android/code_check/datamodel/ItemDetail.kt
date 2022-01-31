@@ -5,7 +5,18 @@ package jp.co.yumemi.android.code_check.datamodel
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.Query
 
+interface GitHubApiInterface {
+    @Headers("Accept: application/vnd.github.v3+json")
+    @GET("items")
+    suspend fun getItemDetails(
+        @Query("q") q: String?
+    ): Call<List<ItemDetail>>
+}
 /**
  * 詳細画面表示項目
  */
