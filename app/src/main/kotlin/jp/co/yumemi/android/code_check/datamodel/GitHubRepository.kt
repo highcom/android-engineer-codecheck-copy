@@ -7,6 +7,9 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.SearchRepositoryMainActivity
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import java.util.*
 
@@ -18,6 +21,7 @@ class GitHubRepository {
     /**
      * 検索結果
      */
+    @OptIn(ExperimentalSerializationApi::class)
     suspend fun searchResults(inputText: String): List<ItemDetail> {
         val client = HttpClient(Android)
 
@@ -37,25 +41,26 @@ class GitHubRepository {
             // アイテムの個数分ループする
             for (i in 0 until jsonItems.length()) {
                 val jsonItem = jsonItems.optJSONObject(i)
-                val name = jsonItem?.optString("full_name")
-                val ownerIconUrl = jsonItem?.optJSONObject("owner")?.optString("avatar_url")
-                val htmlUrl = jsonItem?.optJSONObject("owner")?.optString("html_url")
-                val language = jsonItem?.optString("language")
-                val stargazersCount = jsonItem?.optLong("stargazers_count")
-                val watchersCount = jsonItem?.optLong("watchers_count")
-                val forksCount = jsonItem?.optLong("forks_count")
-                val openIssuesCount = jsonItem?.optLong("open_issues_count")
+                val item = Json.decodeFromString<ItemDetail>("""$jsonItem""")
+//                val name = jsonItem?.optString("full_name")
+//                val ownerIconUrl = jsonItem?.optJSONObject("owner")?.optString("avatar_url")
+//                val htmlUrl = jsonItem?.optJSONObject("owner")?.optString("html_url")
+//                val language = jsonItem?.optString("language")
+//                val stargazersCount = jsonItem?.optLong("stargazers_count")
+//                val watchersCount = jsonItem?.optLong("watchers_count")
+//                val forksCount = jsonItem?.optLong("forks_count")
+//                val openIssuesCount = jsonItem?.optLong("open_issues_count")
 
                 items.add(
                     ItemDetail(
-                        name = name ?: "Anonymous",
-                        ownerIconUrl = ownerIconUrl ?: "",
-                        htmlUrl = htmlUrl ?: "",
-                        language = language ?: "None",
-                        stargazersCount = stargazersCount ?: 0,
-                        watchersCount = watchersCount ?: 0,
-                        forksCount = forksCount ?: 0,
-                        openIssuesCount = openIssuesCount ?: 0
+                        name = item.name ?: "Anonymous",
+                        ownerIconUrl = item.ownerIconUrl ?: "",
+                        htmlUrl = item.htmlUrl ?: "",
+                        language = item.language ?: "None",
+                        stargazersCount = item.stargazersCount ?: 0,
+                        watchersCount = item.watchersCount ?: 0,
+                        forksCount = item.forksCount ?: 0,
+                        openIssuesCount = item.openIssuesCount ?: 0
                     )
                 )
             }
